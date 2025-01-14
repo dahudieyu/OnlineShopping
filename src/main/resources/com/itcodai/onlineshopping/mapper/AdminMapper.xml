@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.itcodai.onlineshopping.mapper.AdminMapper">
+
+<!-- 查询所有订单 -->
+<select id="getAllOrders" resultType="com.itcodai.onlineshopping.entity.OrderItem">
+SELECT
+    id,
+    order_id AS orderId,
+    food_id AS foodId,
+    food_name AS foodName,
+    quantity,
+    price,
+    username AS userName
+FROM order_items
+</select>
+
+</mapper>
