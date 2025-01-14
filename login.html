@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户登录界面</title>
+    <link rel="stylesheet" href="loginstyles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <h1>登录</h1>
+            <form id="loginForm">
+                <div class="input-group">
+                    <label for="username">用户名</label>
+                    <input type="text" id="username" name="username" placeholder="请输入用户名" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">密码</label>
+                    <input type="password" id="password" name="password" placeholder="请输入密码" required>
+                </div>
+                <button type="submit" class="btn">登录</button>
+                <button type="button" id="registerBtn" class="btn">注册</button> <!-- 注册按钮 -->
+                <p class="forgot-password"><a href="#">忘记密码？</a></p>
+            </form>
+        </div>
+    </div>
+</body>
+
+<script src="LogingJumping.js"></script>
+
+
+</html>

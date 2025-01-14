@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理员页面</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>管理员页面</h2>
+
+    <!-- 查看所有用户订单按钮 -->
+    <button id="viewOrdersBtn">查看所有用户订单</button>
+
+    <!-- 订单展示表格 -->
+    <table id="ordersTable">
+        <thead>
+            <tr>
+                <th>订单ID</th>
+                <th>商品ID</th>
+                <th>商品名称</th>
+                <th>数量</th>
+                <th>价格</th>
+                <th>用户名</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- 订单数据将在这里插入 -->
+        </tbody>
+    </table>
+
+    <script>
+        $(document).ready(function () {
+            // 点击查看订单按钮时
+            $('#viewOrdersBtn').click(function () {
+                // 发起 GET 请求获取所有订单
+                $.ajax({
+                    url: 'http://localhost:9090/admin/orders',  // 后端接口
+                    type: 'GET',
+                    success: function (response) {
+                        if (response.code === 200) {
+                            // 清空表格
+                            $('#ordersTable tbody').empty();
+
+                            // 遍历订单数据并添加到表格
+                            response.data.forEach(function (orderItem) {
+                                const row = `
+                                    <tr>
+                                        <td>${orderItem.id}</td>
+                                        <td>${orderItem.foodId}</td>
+                                        <td>${orderItem.foodName}</td>
+                                        <td>${orderItem.quantity}</td>
+                                        <td>${orderItem.price}</td>
+                                        <td>${orderItem.userName}</td> <!-- 修改为 userName -->
+                                    </tr>
+                                `;
+                                $('#ordersTable tbody').append(row);
+                            });
+                        } else {
+                            alert('获取订单失败');
+                        }
+                    },
+                    error: function () {
+                        alert('请求失败，请稍后再试');
+                    }
+                });
+            });
+        });
+    </script>
+
+
+</body>
+
+</html>

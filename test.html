@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中国风点单界面</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+
+<body>
+    <header>
+        中国风点单界面
+        <!-- 添加登录按钮 -->
+        <!-- <button id="login-button" class="login-button">登录</button> -->
+        <button id="user-center" class="user-center" href="user.html">用户中心</button>
+        <!-- 添加退出登录按钮 -->
+        <button id="logout-button" class="logout-button">退出登录</button>
+    </header>
+    <div class="container">
+        <ul class="categories">
+            <li class="active" data-category="all">全部</li>
+            <li data-category="饮品">饮品</li>
+            <li data-category="小吃">小吃</li>
+            <li data-category="主食">主食</li>
+        </ul>
+        <div class="content">
+            <div class="products">
+                <!-- 商品展示区域 -->
+            </div>
+            <div class="cart">
+                <h3>购物车</h3>
+                <div class="cart-items">
+                    <!-- 购物车商品将动态添加 -->
+                </div>
+                <div class="cart-total">总价：¥0</div>
+                <button id="submit-order">提交订单</button> <!-- 添加提交订单按钮 -->
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="All.js"></script>
+
+    <script>
+        // 页面加载时检查 token
+        window.onload = function () {
+            const token = localStorage.getItem("token");  // 从 localStorage 中获取 token
+            localStorage.removeItem("token");
+            if (!token) {
+                // 如果没有 token，跳转到登录页面
+                window.location.href = "login.html";
+            }
+        };
+
+        // 为 "用户中心" 按钮添加点击事件
+        $('#user-center').click(function () {
+            window.location.href = 'user.html';  // 跳转到 user.html 页面
+        });
+
+        // 为 "退出登录" 按钮添加点击事件
+        $('#logout-button').click(function () {
+            localStorage.removeItem("token");  // 清除 token
+            window.location.href = 'login.html';  // 跳转到 login.html 页面
+        });
+    </script>
+</body>
+
+</html>

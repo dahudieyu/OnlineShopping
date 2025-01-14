@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户界面</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            width: 50%;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        input[type="text"] {
+            width: 80%;
+            padding: 8px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        li {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- 修改地址 -->
+        <h2>修改我的地址</h2>
+        <button id="loadAddressBtn">获取地址</button>
+        <form id="addressForm">
+            <label for="address">新地址:</label>
+            <input type="text" id="address" name="address" placeholder="请输入新地址">
+            <button type="submit" id="submitAddressBtn">提交</button>
+        </form>
+
+        <!-- 查看以往订单 -->
+        <h2>查看以往订单</h2>
+        <button id="viewOrdersBtn">查看订单</button>
+        <ul id="orderList"></ul>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            // 获取当前地址并填充到输入框
+            $("#loadAddressBtn").click(function () {
+                // 获取 token 从 localStorage
+                var token = localStorage.getItem('token');  // 假设 token 存储在 localStorage 中
+                if (!token) {
+                    alert("用户未登录");
+                    return;
+                }
+
+                $.ajax({
+                    url: 'http://localhost:9090/api/getAddress',
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + token // 将 token 添加到请求头
+                    },
+                    success: function (data) {
+                        if (data.code === 200) {
+                            $("#address").val(data.data);
+                        } else {
+                            alert("未找到地址");
+                        }
+                    },
+                    error: function () {
+                        alert("获取地址失败");
+                    }
+                });
+            });
+
+            // 提交新的地址
+            $("#addressForm").submit(function (event) {
+                event.preventDefault();  // 防止表单默认提交
+                const newAddress = $("#address").val();
+
+                if (newAddress.trim() === "") {
+                    alert("地址不能为空");
+                    return;
+                }
+
+                var token = localStorage.getItem('token');  // 获取 token
+                if (!token) {
+                    alert("用户未登录");
+                    return;
+                }
+
+                $.ajax({
+                    url: 'http://localhost:9090/api/updateAddress',
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + token // 将 token 添加到请求头
+                    },
+                    data: { address: newAddress },
+                    success: function (response) {
+                        if (response.code === 200) {
+                            alert("地址更新成功");
+                        } else {
+                            alert("地址更新失败");
+                        }
+                    },
+                    error: function () {
+                        alert("更新地址失败");
+                    }
+                });
+            });
+
+            // 查看以往订单
+            $("#viewOrdersBtn").click(function () {
+                var token = localStorage.getItem('token');  // 获取 token
+                if (!token) {
+                    alert("用户未登录");
+                    return;
+                }
+
+                $.ajax({
+                    url: 'http://localhost:9090/api/getOrders',
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + token // 将 token 添加到请求头
+                    },
+                    success: function (data) {
+                        if (data.code === 200 && data.data.length > 0) {
+                            $("#orderList").empty();  // 清空当前列表
+                            data.data.forEach(order => {
+                                // 只展示所需的字段，不展示 id、orderId 和 userName
+                                $("#orderList").append(`<li>商品: ${order.foodName} | 数量: ${order.quantity} | 单价: ${order.price}</li>`);
+                            });
+                        } else {
+                            alert("没有找到订单记录");
+                        }
+                    },
+                    error: function () {
+                        alert("获取订单失败");
+                    }
+                });
+
+            });
+        });
+    </script>
+
+</body>
+
+</html>
